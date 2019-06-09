@@ -1,15 +1,19 @@
 ---
+# This playbook is for the "Writing Your First Ansible Playbook" section Linux Academy
 - hosts: all
   become: yes
   tasks:
+      # Writes a host entry via the lineinfile module into /etc/hosts
     - name: Edit /etc/hosts to add line for ansible.xyzcorp.com..
       lineinfile:
           path: /etc/hosts
           line: "10.0.1.68 ansible.xyzcorp.com"
+      # Installs the latest elinks binary onto destination
     - name: Install elinks application
       yum:
           name: elinks
           state: latest
+      # Adds xyzcorp_audit user to all hosts 
     - name: Add audit user
       user:
           name: xyzcorp_audit
