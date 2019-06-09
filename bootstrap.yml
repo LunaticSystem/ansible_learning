@@ -1,0 +1,26 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Edit /etc/hosts to add line for ansible.xyzcorp.com..
+      lineinfile:
+          path: /etc/hosts
+          line: "10.0.1.68 ansible.xyzcorp.com"
+    - name: Install elinks application
+      yum:
+          name: elinks
+          state: latest
+    - name: Add audit user
+      user:
+          name: xyzcorp_audit
+          state: present
+    - name: Copy motd file to /etc/
+      copy:
+          src: /home/motd
+          dest: /etc/motd
+    - name: Copy issues file to /etc/
+      copy:
+          src: /home/issues
+          dest: /etc/issues
+
+
