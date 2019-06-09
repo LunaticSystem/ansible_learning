@@ -40,6 +40,6 @@
   tasks:
      - name: Copy sysadmin scripts to server.
        copy:
-          src: /home/scripts.tgz
+          src: /home/ansible/scripts.tgz
           dest: /mnt/storage/scripts.tgz
 
