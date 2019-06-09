@@ -20,7 +20,7 @@
           dest: /etc/motd
     - name: Copy issues file to /etc/
       copy:
-          src: /home/ansible/issues
+          src: /home/ansible/issue
           dest: /etc/issues
 
 - hosts: network
