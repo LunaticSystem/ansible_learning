@@ -16,11 +16,30 @@
           state: present
     - name: Copy motd file to /etc/
       copy:
-          src: /home/motd
+          src: /home/ansible/motd
           dest: /etc/motd
     - name: Copy issues file to /etc/
       copy:
-          src: /home/issues
+          src: /home/ansible/issues
           dest: /etc/issues
 
+- hosts: network
+  become: yes
+  tasks:
+    - name: Install nmap-ncat
+      yum:
+          name: nmap-ncat
+          state: latest
+    - name: Create network user
+      user:
+          name: xyzcorp_network
+          state: present
+
+- hosts: sysadmin
+  become: yes
+  tasks:
+     - name: Copy sysadmin scripts to server.
+       copy:
+          src: /home/scripts.tgz
+          dest: /mnt/storage/scripts.tgz
 
