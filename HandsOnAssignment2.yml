@@ -1,6 +1,6 @@
 ---
 # Second Hands on assignment Ansible Playbook Deep Dive on LA
-- host: nfs
+- hosts: nfs
   become: yes
   vars:
       share_path: /mnt/nfsroot
@@ -24,7 +24,7 @@
       command: exportfs -a
       listen: update nfs
 
-- host: remote
+- hosts: remote
   become: yes
   vars:
       nfs_ip: "{{ hostvars['nfs']['ansible_default_ipv4']['address'] }}"
