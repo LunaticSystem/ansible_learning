@@ -1,0 +1,52 @@
+---
+# Second Hands on assignment Ansible Playbook Deep Dive on LA
+- host: nfs
+  become: yes
+  vars:
+      share_path: /mnt/nfsroot
+  tasks:
+    - name: Install nfs-utils package..
+      yum:
+          name: nfs-utils
+          state: latest
+    - name: Make sure nfs service is started
+      service:
+          name: nfs-server
+          state: started
+          enabled: yes
+    - name: Configure /etc/exports via jinja template
+      template:
+          src: /home/ansible/exports.j2
+          dest: /etc/exports
+      notify: update nfs
+  handlers:
+    - name: Update nfs exports 
+      command: exportfs -a
+      listen: update nfs
+
+- host: remote
+  become: yes
+  vars:
+      nfs_ip: "{{ hostvars['nfs']['ansible_default_ipv4']['address'] }}"
+      nfs_hostname: "{{ hostvars['nfs']['ansible_hostname'] }}"
+  vars_files:
+      - /home/ansible/user-list.txt
+  tasks:
+    - name: Configure /etc/hosts file 
+      template:
+          src: /home/ansible/etc.hosts.j2
+          dest: /etc/hosts.nfslab
+    - name: Check if /opt/user-agreement.txt exists on remote host
+      stat:
+          path: /opt/user-agreement.txt
+      register: filestat
+    - name: Debug info
+      debug:
+          var: filestat
+    - name: Create users when /opt/agreement.txt exists
+      user:
+          name: "{{ item }}"
+      when: filestat.stat.exists
+      loop: "{{ users }}"
+      
+    
